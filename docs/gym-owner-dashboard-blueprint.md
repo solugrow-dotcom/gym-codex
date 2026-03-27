@@ -146,6 +146,12 @@ Each card includes:
 - This month collected vs outstanding
 - Top defaulters (optional private view)
 
+### Auto-Pay (Monthly Subscription) Option
+- Gym owner can enable **Auto-Pay** at plan purchase/renewal.
+- Saved mandate/card/UPI AutoPay automatically charges monthly fee.
+- Billing receipt is generated instantly after successful auto charge.
+- If one attempt fails, smart retries run before service impact.
+
 ---
 
 ## 2.5 Attendance System Page
@@ -383,6 +389,12 @@ Reports turn daily operations into monthly strategy (pricing, retention, staffin
 ## 5.5 Weekly business digest (recommended)
 - Trigger: every Monday morning.
 - Action: send weekly revenue, renewals due, risk members, trainer performance snapshot.
+
+## 5.6 Subscription auto-debit continuity flow
+- Trigger: monthly subscription renewal date.
+- Action: auto-debit from owner’s selected payment method and settle to SaaS admin account.
+- On success: mark payment paid + send invoice + keep services active.
+- On failure: run retry sequence + alert owner before any restriction.
 
 ---
 

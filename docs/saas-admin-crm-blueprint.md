@@ -130,6 +130,12 @@ Each KPI card includes:
 - Apply discount/coupon
 - Pause/cancel subscription
 
+### AutoPay controls (for SaaS continuity)
+- Enable/disable AutoPay per gym subscription.
+- View mandate status (active, paused, failed, revoked).
+- Configure retry rules and grace windows.
+- Keep services active when payment succeeds automatically.
+
 ---
 
 ## 2.5 User Management
@@ -362,6 +368,12 @@ Trigger: every day 8:00 AM.
 Trigger: gym has low activity (no login/no attendance data/no billing activity for threshold days).
 - Send retention campaign message.
 - Create manual intervention task.
+
+## 5.6 Monthly auto-payment workflow
+Trigger: subscription renewal day for each active gym.
+- Attempt AutoPay from saved owner payment method.
+- On success: update subscription as paid, post payment to admin ledger, issue invoice, keep access active.
+- On failure: retry as per dunning policy, notify owner, and apply service restrictions only after grace period.
 
 ---
 

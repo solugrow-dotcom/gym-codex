@@ -394,6 +394,8 @@ A multi-tenant B2B SaaS platform where each gym owner gets an isolated digital o
 - Auto-upgrade flow with payment method capture.
 - Dunning workflow for failed renewals.
 - Upgrade/downgrade with proration handling.
+- Optional monthly **AutoPay** so owner billing is charged automatically without manual payment each cycle.
+- Service continuity rule: keep gym services uninterrupted on successful auto-debit and invoice generation.
 
 ## 4.3 Automated Reminders
 - Membership expiring in X days.
