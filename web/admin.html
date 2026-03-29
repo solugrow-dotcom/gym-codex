@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Admin - SoluGrow</title><link rel='stylesheet' href='/styles.css'><script src='https://unpkg.com/@supabase/supabase-js@2'></script><script src='/app.js'></script></head><body>
+<div class='container section'><h1>Admin Dashboard</h1>
+<div class='grid grid-3'><div class='card'><div class='kpi' id='k1'>0</div><div class='sub'>Total Gyms</div></div><div class='card'><div class='kpi' id='k2'>0</div><div class='sub'>Active Users</div></div><div class='card'><div class='kpi' id='k3'>₹0</div><div class='sub'>Revenue</div></div></div>
+<div class='card section'><h3>All Gyms</h3><table class='table' id='t'><thead><tr><th>Gym</th><th>Email</th><th>Phone</th><th>City</th><th>Status</th><th>Plan</th><th>Start</th><th>End</th></tr></thead><tbody></tbody></table></div>
+<button class='btn ghost' onclick='App.logout()'>Logout</button></div>
+<script>
+(async()=>{ await App.requireAuth(['admin']);
+const gyms=(await App.sb.from('gyms').select('*')).data||[];
+document.getElementById('k1').textContent=gyms.length;
+document.getElementById('k2').textContent=gyms.filter(g=>g.status==='active').length;
+const paid=(await App.sb.from('payments').select('amount,status').eq('status','paid')).data||[];
+document.getElementById('k3').textContent='₹'+paid.reduce((s,p)=>s+(p.amount||0),0);
+const tb=document.querySelector('#t tbody');
+for(const g of gyms){tb.innerHTML += `<tr><td>${g.name||''}</td><td>${g.email||''}</td><td>${g.phone||''}</td><td>${g.city||''}</td><td>${g.status||''}</td><td>${g.plan_name||'-'}</td><td>${(g.start_date||'').slice(0,10)}</td><td>${(g.end_date||'').slice(0,10)}</td></tr>`}
+})();
+</script></body></html>

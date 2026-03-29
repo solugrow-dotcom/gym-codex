@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Login - SoluGrow</title><link rel='stylesheet' href='/styles.css'><script src='https://unpkg.com/@supabase/supabase-js@2'></script><script src='/app.js'></script></head><body>
+<div class='container section'><h1>Login</h1><div class='card'><form id='f'>
+<label>Email<input type='email' name='email' required></label>
+<label>Password<input type='password' name='password' required></label>
+<button class='btn' type='submit'>Login</button></form><p id='m' class='sub'></p></div></div>
+<script>
+App.redirectIfLoggedIn();
+document.getElementById('f').onsubmit = async (e)=>{e.preventDefault(); const d=Object.fromEntries(new FormData(e.target)); const m=document.getElementById('m');
+try{await App.login(d.email,d.password);}catch(err){m.textContent=err.message;}
+};
+</script></body></html>
