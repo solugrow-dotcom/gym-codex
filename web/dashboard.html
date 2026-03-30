@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Gym Owner - SoluGrow</title><link rel='stylesheet' href='/styles.css'><script src='https://unpkg.com/@supabase/supabase-js@2'></script><script src='/app.js'></script></head><body>
+<div class='container section'><h1>Gym Owner Dashboard</h1>
+<div class='grid grid-2'><div class='card'><div class='kpi' id='m1'>0</div><div class='sub'>Total Members</div></div><div class='card'><div class='kpi' id='m2'>0</div><div class='sub'>Active Members</div></div><div class='card'><div class='kpi' id='m3'>₹0</div><div class='sub'>Revenue</div></div><div class='card'><div class='kpi' id='m4'>0</div><div class='sub'>Expiring Members</div></div></div>
+<div class='grid grid-2 section'>
+<div class='card'><h3>Add Member</h3><form id='mf' class='form-grid'><input name='name' placeholder='name' required><input name='phone' placeholder='phone' required><input name='plan' placeholder='plan'><input name='amount' type='number' placeholder='amount'><input name='start_date' type='date'><input name='end_date' type='date'><button class='btn' type='submit'>Save Member</button></form></div>
+<div class='card'><h3>Add Staff</h3><form id='sf' class='form-grid'><input name='full_name' placeholder='name' required><input name='phone' placeholder='phone'><select name='role'><option>trainer</option><option>manager</option><option>receptionist</option><option>other</option></select><button class='btn' type='submit'>Add Staff</button></form></div>
+</div>
+<div class='card'><h3>Members</h3><table class='table' id='mt'><thead><tr><th>Name</th><th>Phone</th><th>Plan</th><th>Amount</th><th>Start</th><th>End</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+<button class='btn ghost' onclick='App.logout()'>Logout</button>
+</div>
+<script>
+(async()=>{const p=await App.requireAuth(['gym_owner']); if(!p) return; if(!(await App.requireActiveSubscription(p))) return;
+const gym=(await App.sb.from('gyms').select('id').eq('owner_user_id',p.id).single()).data; window.gymId=gym.id;
+async function load(){
+const members=(await App.sb.from('members').select('*').eq('gym_id',gym.id)).data||[];
+document.getElementById('m1').textContent=members.length;
+document.getElementById('m2').textContent=members.filter(x=>x.status==='active').length;
+document.getElementById('m4').textContent=members.filter(x=>x.end_date && new Date(x.end_date)-new Date()<7*86400000).length;
+const payments=(await App.sb.from('payments').select('amount,status').eq('gym_id',gym.id).eq('status','paid')).data||[];
+document.getElementById('m3').textContent='₹'+payments.reduce((s,p)=>s+(p.amount||0),0);
+const tb=document.querySelector('#mt tbody');tb.innerHTML=''; members.forEach(m=>tb.innerHTML += `<tr><td>${m.name}</td><td>${m.phone||''}</td><td>${m.plan||''}</td><td>${m.amount||0}</td><td>${(m.start_date||'').slice(0,10)}</td><td>${(m.end_date||'').slice(0,10)}</td><td>${m.status||''}</td></tr>`);
+}
+await load();
+document.getElementById('mf').onsubmit=async(e)=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));d.gym_id=gym.id;d.status='active';await App.sb.from('members').insert(d);e.target.reset();load();}
+document.getElementById('sf').onsubmit=async(e)=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));d.gym_id=gym.id;await App.sb.from('staff').insert(d);e.target.reset();alert('Staff added');}
+})();
+</script></body></html>

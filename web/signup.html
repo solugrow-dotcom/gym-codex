@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Signup - SoluGrow</title><link rel='stylesheet' href='/styles.css'><script src='https://unpkg.com/@supabase/supabase-js@2'></script><script src='/app.js'></script></head><body>
+<div class='container section'><h1>Setup My Gym</h1><div class='card'><form id='f' class='form-grid'>
+<div><label>Gym Name<input name='gym_name' required></label></div>
+<div><label>Email<input type='email' name='email' required></label></div>
+<div><label>Phone<input name='phone' required></label></div>
+<div><label>City<input name='city' required></label></div>
+<div><label>State<input name='state' required></label></div>
+<div><label>Country<input name='country' required value='India'></label></div>
+<div><label>Password<input type='password' name='password' required></label></div>
+<div style='align-self:end'><button class='btn' type='submit'>Create Account</button></div>
+</form><p id='m' class='sub'></p><p>Already have account? <a href='/login'>Login</a></p></div></div>
+<script>
+App.redirectIfLoggedIn();
+document.getElementById('f').onsubmit = async (e)=>{e.preventDefault(); const d=Object.fromEntries(new FormData(e.target)); const m=document.getElementById('m');
+try{await App.signupGymOwner(d); m.textContent='Signup successful. Please login.'; location.href='/login';}
+catch(err){m.textContent=err.message;}
+};
+</script></body></html>
